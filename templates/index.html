@@ -1,65 +1,35 @@
 <!DOCTYPE html>
-<html lang="pt-br">
-
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title id="index">CB-NET :)</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página de Navegação</title>
+    <!-- Adicione o link para o CSS do Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
 
-  </head>
-
-<body >
-  <header id="topo">
-    <div>
-      <div class="row text-center">
-        <div class="col-sm-11 titulo">
-          <!--class="col-sm-9"-->
-          <h1>Compra Barato NET</h1>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col">
+            <h2 class="mb-4">Página de Navegação</h2>
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <a href={{url_for("cadUsuario")}}>Cadastro de Usuário</a>
+                </li>
+                <li class="list-group-item">
+                    <a href="cadastro_categoria.html">Cadastro de Categoria</a>
+                </li>
+                <li class="list-group-item">
+                    <a href="cadastro_anuncio.html">Cadastro de Anúncio</a>
+                </li>
+                <li class="list-group-item">
+                    <a href="login.html">Login</a>
+                </li>
+            </ul>
         </div>
-      </div>
-
-          <nav id="barra_acessibilidade" class="navbar navbar-expand-lg navbar-light bg-light">
-            <button type="button" id="botao_menu" class="navbar-toggler" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                <ul class="navbar-nav">
-
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Cadastros </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <a class="dropdown-item" href="#">Usuário</a>
-                            <a class="dropdown-item" href="#">Categoria</a>
-                            <a class="dropdown-item" href="#">Anúncio</a>
-                        </div>
-              </li>
-
-              <li class="nav-item">
-                <a class="nav-link" href="#">Anúncio</a>
-              </li>
-
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Relatório </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <a class="dropdown-item" href="">Venda</a>
-                            <a class="dropdown-item" href="">Compra</a>
-                        </div>
-              </li>
-            </div>
-          </nav>
-        </div>
-      </div>
-  </header>
-  <footer id="rodape" class="footer navbar-fixed-bottom text-center">
-    <div class="col-12">
-      <p>Copyright © 2022</p>
     </div>
-  </footer>
+</div>
 
-
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-  <noscript>Atualize seu navegador</noscript>
-  </body>
-
-</html>
+<!-- Adicione os links para os scripts do Bootstrap e do jQuery no final do body -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim
