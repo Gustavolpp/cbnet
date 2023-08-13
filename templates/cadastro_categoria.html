@@ -2,9 +2,48 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>CADASTRO DE CATEGORIA</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Categoria</title>
+    <!-- Adicione o link para o CSS do Bootstrap -->
+    <link rel="stylesheet" href="../static/css/bootstrap.css">
 </head>
 <body>
-    <h1>CADASTRO DE CATEGORIA</h1>
+
+<div class="container mt-5">
+    <h2>Cadastro de Categoria</h2>
+    <form action="novacategoria" method="post">
+        <div class="form-group">
+            <label for="nome">Nome:</label>
+            <input type="text" class="form-control" id="nome" name="nome" placeholder="Digite o nome da categoria">
+        </div>
+        <div class="form-group">
+            <label for="desc">Descrição:</label>
+            <textarea class="form-control" id="desc" name="desc" placeholder="Digite a descrição da categoria"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Cadastrar</button>
+    </form>
+
+    <h2 class="mt-5">Lista de Categorias</h2>
+    <table id="listaCategorias" class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Descrição</th>
+                <th>Ação</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for categoria in categorias %}
+            <tr>
+                <td>{{categoria.nome}}</td>
+                <td>{{categoria.desc}}</td>
+                <td><a href={{ url_for("editarcategoria", id=categoria.id) }}>Editar</a>
+                    <a href={{ url_for("deletarcategoria", id=categoria.id) }}>Deletar</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
 </body>
 </html>

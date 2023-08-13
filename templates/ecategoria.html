@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Usuário</title>
+    <link rel="stylesheet" href="../../static/css/bootstrap.css">
+</head>
+<body>
+
+<div class="container mt-5">
+    <h2>Alteração de Categoria</h2>
+    <form action="/categoria/editar/{{categoria.id}}" method="post">
+        <div class="form-group">
+            <label for="nome">Nome:</label>
+            <input type="text" class="form-control" id="nome" name="nome" value="{{categoria.nome}}" placeholder="Digite o nome">
+        </div>
+        <div class="form-group">
+            <label for="desc">CPF:</label>
+            <input type="text" class="form-control" id="desc" name="desc" value="{{categoria.desc}}" placeholder="Digite a descrição da categoria">
+        </div>
+        <button type="submit" class="btn btn-primary">Alterar</button>
+    </form>
+</div>
+
+</body>
+</html>

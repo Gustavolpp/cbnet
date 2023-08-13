@@ -2,9 +2,74 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>CADASTRO DE ANÚNCIO</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Anúncio</title>
+    <link rel="stylesheet" href="../static/css/bootstrap.css">
 </head>
 <body>
-    <h1>CADASTRO DE ANÚNCIO</h1>
+
+<div class="container mt-5">
+    <h2>Cadastro de Anúncio</h2>
+    <form action="novoanuncio" method="post">
+        <div class="form-group">
+            <label for="titulo">Título:</label>
+            <input type="text" class="form-control" id="titulo" name="titulo" placeholder="Digite o título" required>
+        </div>
+        <div class="form-group">
+            <label for="desc">Descrição:</label>
+            <textarea class="form-control" id="desc" name="desc" rows="3" placeholder="Digite a descrição" required></textarea>
+        </div>
+        <div class="form-group">
+            <label for="valor">Valor:</label>
+            <input type="number" class="form-control" id="valor" name="valor" placeholder="Digite o valor" required>
+        </div>
+        <div class="form-group">
+            <label for="ativo">Ativo:</label>
+            <select class="form-control" name="ativo" id="ativo">
+                <option value="1">Sim</option>
+                <option value="0">Não</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="categoria">Categoria:</label>
+            <select class="form-control" name="categoria" id="categoria">
+                {% for categoria in categorias %}
+                <option value="{{ categoria.id }}">{{ categoria.nome }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Cadastrar</button>
+    </form>
+
+    <h2 class="mt-5">Lista de Anúncios</h2>
+    <table id="listaAnuncios" class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Título</th>
+                <th>Descrição</th>
+                <th>Valor</th>
+                <th>Ativo</th>
+                <th>Categoria</th>
+                <th>Ação</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for anuncio in anuncios %}
+            <tr>
+                <td>{{ anuncio.titulo }}</td>
+                <td>{{ anuncio.desc }}</td>
+                <td>{{ anuncio.valor }}</td>
+                <td>{{ "Sim" if anuncio.ativo else "Não" }}</td>
+                <td>{{ anuncio.cat_id }}</td>
+                <td>
+                    <a href={{ url_for("editaranuncio", id=anuncio.id) }}>Editar</a>
+                    <a href={{ url_for("deletaranuncio", id=anuncio.id) }}>Deletar</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
 </body>
 </html>
