@@ -136,6 +136,10 @@ def deletarcategoria(id):
     db.session.commit()
     return redirect(url_for('cadCategoria'))
 
+@app.errorhandler(404)
+def paginanaoencontrada(error):
+    return render_template('pagnaoencontrada.html')
+
 
 @app.route("/cadastro/anuncio")
 def cadAnuncio():
