@@ -16,6 +16,14 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
+
+@app.context_processor
+def common_context():
+    logado = False
+    print(current_user)
+    if hasattr(current_user,"id"):
+        logado = True
+    return dict(logado=logado)
 class Usuario(db.Model):
     __tablename__ = "usuario"
     id = db.Column('usu_id', db.Integer, primary_key=True)
@@ -115,7 +123,6 @@ def index():
 
 @app.route("/cadastro/usuario")
 def cadUsuario():
-    print(current_user.nome)
     return render_template('cadastro_usuario.html', usuarios=Usuario.query.all())
 
 
