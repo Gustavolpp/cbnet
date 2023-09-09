@@ -1,10 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>ANÚNCIO</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anúncio</title>
+  <!-- Adicione os links para o Bootstrap CSS -->
+    <link rel="stylesheet" href="../../static/css/bootstrap.css">
 </head>
 <body>
-    <h1>ANÚNCIO</h1>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <a class="navbar-brand" href="#">Minha Página</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href={{url_for("index")}}>Início</a>
+                </li>
+                <li class="nav-item">
+                    {% if logado == False %}
+                        <a class="nav-link" href={{url_for("login")}}>Realizar Login</a>
+                    {% else %}
+                        <a class="nav-link" href={{url_for("logout")}}>Realizar Logout</a>
+                    {% endif %}
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+<div class="container mt-5">
+    <div class="row">
+        <!-- Coluna da Apresentação do Item -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Anuncio</h4>
+                    <h5 class="card-title">{{anuncio.titulo}}</h5>
+                    <p class="card-text">{{ anuncio.desc }}</p>
+                    <p class="card-text">Preço: R$ {{anuncio.valor}}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Coluna da Opção de Compra -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Comprar Agora</h5>
+                    <form action="/novacompra" method="POST">
+                         <input type="hidden" name="anu_id" value="{{anuncio.id}}">
+                        <div class="mb-3">
+                            <label for="quantidade" class="form-label">Quantidade:</label>
+                            <input type="number" class="form-control" id="quantidade" placeholder="Informe a quantidade">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Finalizar Compra</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <!-- Seção para inserir uma avaliação -->
+            <h3>Deixe sua avaliação</h3>
+            <form action="/novaavaliacao" method="POST">
+                <input type="hidden" name="anu_id" value="{{anuncio.id}}">
+                <div class="mb-3">
+                    <label for="mensagem" class="form-label">Avaliação</label>
+                    <textarea class="form-control" id="mensagem" name="mensagem" rows="4" required></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="nota" class="form-label">Nota (de 1 a 5)</label>
+                    <input type="number" class="form-control" id="nota" name="nota" min="1" max="5" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Enviar Avaliação</button>
+            </form>
+
+            <!-- Lista de avaliações -->
+            <h3>Avaliações dos Usuários</h3>
+            <ul class="list-group">
+                {% for avaliacao in anuncio.avaliacoes %}
+                    <li class="list-group-item">
+                        <strong>Nota: {{ avaliacao.nota }}</strong><br>
+                        {{ avaliacao.mensagem }}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Adicione os scripts do Bootstrap (jQuery e Popper.js) e Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

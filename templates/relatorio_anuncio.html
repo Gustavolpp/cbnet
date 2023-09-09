@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../static/css/bootstrap.css">
+    <title>Lista de Anúncios</title>
+
+    <style>
+        .message-icon {
+            position: relative;
+            font-size: 1.25rem;
+        }
+
+        .message-count {
+            position: absolute;
+            top: -5px;
+            right: -8px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 50%;
+            padding: 4px 8px;
+            font-size: 0.75rem;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <a class="navbar-brand" href="#">Minha Página</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href={{url_for("index")}}>Início</a>
+                </li>
+                <li class="nav-item">
+                    {% if logado == False %}
+                        <a class="nav-link" href={{url_for("login")}}>Realizar Login</a>
+                    {% else %}
+                        <a class="nav-link" href={{url_for("logout")}}>Realizar Logout</a>
+                    {% endif %}
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container mt-5">
+        <h1>Lista de Anúncios</h1>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Título</th>
+                    <th>Descrição</th>
+                    <th>Preço</th>
+                    <th>Id Categoria</th>
+                    <th>Ativo</th>
+                    <th>Qtde. de Avaliações</th>
+                    <th>Media de Avaliações</th>
+                    <th>Ação</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for anuncio in anuncios %}
+            <tr>
+                <td>{{ anuncio.titulo }}</td>
+                <td>{{ anuncio.desc }}</td>
+                <td>{{ anuncio.valor }}</td>
+                <td>{{ anuncio.cat_id }}</td>
+                <td>{{ "Sim" if anuncio.ativo else "Não" }}</td>
+                <td>{{ anuncio.qtde_avaliacao }}</td>
+                <td>{{anuncio.media_notas}}</td>
+                <td>
+                    <button class="btn btn-primary" onclick="redirecionar('{{ url_for('anuncio', id=anuncio.id) }}')">Visualizar</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        <script>
+        function redirecionar(url) {
+            window.location.href = url;
+        }
+    </script>
+    </div>
+</body>
+</html>

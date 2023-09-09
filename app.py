@@ -2,6 +2,7 @@ from flask import Flask, render_template, url_for, redirect, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import current_user, LoginManager, login_user, logout_user, login_required
 import hashlib
+import datetime
 
 
 app = Flask(__name__)
@@ -20,7 +21,6 @@ login_manager.login_view = 'login'
 @app.context_processor
 def common_context():
     logado = False
-    print(current_user)
     if hasattr(current_user,"id"):
         logado = True
     return dict(logado=logado)
@@ -33,7 +33,7 @@ class Usuario(db.Model):
     login = db.Column('usu_login', db.String(256))
     senha = db.Column('usu_senha', db.String(256))
     tipo = db.Column('usu_tipo', db.String(256))
-
+    compras = db.relationship('Compra', back_populates='usuario')
     def __init__(self, nome, cpf, email, login, senha, tipo):
         self.nome = nome
         self.cpf = cpf
@@ -41,6 +41,7 @@ class Usuario(db.Model):
         self.login = login
         self.senha = senha
         self.tipo = tipo
+
 
     def is_authenticated(self):
         return True
@@ -75,7 +76,8 @@ class Anuncio(db.Model):
     valor = db.Column('anu_valor', db.Float)
     cat_id = db.Column('cat_id', db.Integer, db.ForeignKey("categoria.cat_id"))
     usu_id = db.Column('usu_id', db.Integer, db.ForeignKey("usuario.usu_id"))
-
+    avaliacoes = db.relationship('Avaliacao', back_populates='anuncio')
+    compras = db.relationship('Compra', back_populates='anuncio')
     def __init__(self, titulo, desc, ativo, valor, cat_id, usu_id):
         self.titulo = titulo
         self.desc = desc
@@ -84,6 +86,40 @@ class Anuncio(db.Model):
         self.cat_id = cat_id
         self.usu_id = usu_id
 
+
+class Avaliacao(db.Model):
+    __tablename__ = "avaliacao"
+    id = db.Column('ava_id', db.Integer, primary_key=True)
+    mensagem = db.Column('ava_mensagem', db.Text)
+    data = db.Column('ava_data', db.DateTime)
+    nota = db.Column('ava_nota', db.Integer)
+    usu_id = db.Column('usu_id', db.Integer, db.ForeignKey("usuario.usu_id"))
+    anu_id = db.Column('anu_id', db.Integer, db.ForeignKey("anuncio.anu_id"))
+    anuncio = db.relationship('Anuncio', back_populates='avaliacoes')
+
+    def __init__(self, mensagem, data, nota, usu_id, anu_id):
+        self.mensagem = mensagem
+        self.data = data
+        self.nota = nota
+        self.usu_id = usu_id
+        self.anu_id = anu_id
+
+
+class Compra(db.Model):
+    __tablename__ = "compra"
+    id = db.Column('ava_id', db.Integer, primary_key=True)
+    quantidade = db.Column('com_id', db.Integer)
+    data = db.Column('com_data', db.DateTime)
+    usu_id = db.Column('usu_id', db.Integer, db.ForeignKey("usuario.usu_id"))
+    anu_id = db.Column('anu_id', db.Integer, db.ForeignKey("anuncio.anu_id"))
+    anuncio = db.relationship('Anuncio', back_populates='compras')
+    usuario = db.relationship('Usuario', back_populates='compras')
+
+    def __init__(self, quantidade, data, usu_id, anu_id):
+        self.quantidade = quantidade
+        self.data = data
+        self.usu_id = usu_id
+        self.anu_id = anu_id
 
 @login_manager.user_loader
 def load_user(id):
@@ -221,6 +257,7 @@ def novoanuncio():
     db.session.commit()
     return redirect(url_for('cadAnuncio'))
 
+
 @app.route("/anuncio/editar/<int:id>", methods=['GET','POST'])
 @login_required
 def editaranuncio(id):
@@ -237,6 +274,7 @@ def editaranuncio(id):
         return redirect(url_for('cadAnuncio'))
     return render_template('eanuncio.html', anuncio=anuncio, categorias=Categoria.query.all())
 
+
 @app.route("/anuncio/deletar/<int:id>")
 @login_required
 def deletaranuncio(id):
@@ -246,15 +284,69 @@ def deletaranuncio(id):
     return redirect(url_for('cadAnuncio'))
 
 
-@app.route("/anuncio")
-def anuncio():
-    return render_template('anuncio.html')
+@app.route("/anuncio/<int:id>")
+@login_required
+def anuncio(id):
+    anuncio = Anuncio.query.get(id)
+
+    categoria = Categoria.query.get(anuncio.cat_id)
+
+    return render_template('anuncio.html', anuncio=anuncio, categoria=categoria)
 
 
-@app.route("/relatorio")
-def relatorio():
-    return render_template('relatorio.html')
+@app.route("/novaavaliacao", methods=['POST'])
+@login_required
+def novaavaliacao():
+    user = current_user
+    avaliacao = Avaliacao(request.form.get('mensagem'),
+                      datetime.datetime.now(),
+                      request.form.get('nota'),
+                      user.id,
+                      request.form.get("anu_id"))
+    db.session.add(avaliacao)
+    db.session.commit()
+    return redirect(url_for('anuncio', id=request.form.get("anu_id")))
 
 
-if __name__ == 'app':
+@app.route("/relatorioanuncio")
+@login_required
+def relatorioanuncio():
+    anuncios = Anuncio.query.all()
+    for anuncio in anuncios:
+        anuncio.qtde_avaliacao = len(anuncio.avaliacoes)
+        total_notas = 0
+        quantidade_avaliacoes = 0
+
+        for avaliacao in anuncio.avaliacoes:
+            total_notas += avaliacao.nota
+            quantidade_avaliacoes += 1
+
+        if quantidade_avaliacoes > 0:
+            media_notas = total_notas / quantidade_avaliacoes
+            anuncio.media_notas = media_notas
+        else:
+            anuncio.media_notas = 0
+
+    return render_template('relatorio_anuncio.html', anuncios=anuncios)
+
+@app.route("/relatoriocompras")
+@login_required
+def relatoriocompras():
+
+    return render_template('relatorio_compras.html', compras=Compra.query.all())
+
+@app.route("/novacompra", methods=['POST'])
+@login_required
+def novacompra():
+    user = current_user
+    compra = Compra(request.form.get('quantidade'),
+                          datetime.datetime.now(),
+                          user.id,
+                          request.form.get("anu_id"))
+
+    db.session.add(compra)
+    db.session.commit()
+    return redirect(url_for('anuncio', id=request.form.get("anu_id")))
+
+if __name__ == "app":
     db.create_all()

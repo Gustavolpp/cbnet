@@ -3,9 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página de Navegação</title>
-    <!-- Adicione o link para o CSS do Bootstrap -->
     <link rel="stylesheet" href="../../static/css/bootstrap.css">
+    <title>Lista de Compras</title>
+
+    <style>
+        .message-icon {
+            position: relative;
+            font-size: 1.25rem;
+        }
+
+        .message-count {
+            position: absolute;
+            top: -5px;
+            right: -8px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 50%;
+            padding: 4px 8px;
+            font-size: 0.75rem;
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
@@ -28,31 +45,28 @@
             </ul>
         </div>
     </nav>
-
-<div class="container mt-5">
-    <div class="row">
-        <div class="col">
-            <h2 class="mb-4">Página de Navegação</h2>
-            <ul class="list-group">
-                <li class="list-group-item">
-                    <a href={{url_for("cadUsuario")}}>Cadastro de Usuário</a>
-                </li>
-                <li class="list-group-item">
-                    <a href={{url_for("cadCategoria")}}>Cadastro de Categoria</a>
-                </li>
-                <li class="list-group-item">
-                    <a href={{url_for("cadAnuncio")}}>Cadastro de Anúncio</a>
-                </li>
-                 <li class="list-group-item">
-                    <a href={{url_for("relatorioanuncio")}}>Relatorio de Anuncios</a>
-                </li>
-                 <li class="list-group-item">
-                    <a href={{url_for("relatoriocompras")}}>Relatorio de Compras</a>
-                </li>
-            </ul>
-        </div>
+    <div class="container mt-5">
+        <h1>Lista de Compras</h1>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Anuncio</th>
+                    <th>Descrição</th>
+                    <th>Preço</th>
+                    <th>Comprador</th>
+                    <th>Media de Avaliações</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for compra in compras %}
+            <tr>
+                <td>{{ compra.anuncio.titulo }}</td>
+                <td>{{ compra.anuncio.desc }}</td>
+                <td>{{ compra.anuncio.valor }}</td>
+                <td>{{ compra.usuario.nome}}</td>
+            </tr>
+            {% endfor %}
+        </table>
     </div>
-</div>
-
-<!-- Adicione os links para os scripts do Bootstrap e do jQuery no final do body -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim
+</body>
+</html>
